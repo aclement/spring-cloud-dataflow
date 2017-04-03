@@ -36,7 +36,9 @@ import org.springframework.cloud.dataflow.rest.resource.StepExecutionResource;
 import org.springframework.cloud.dataflow.rest.resource.StreamDefinitionResource;
 import org.springframework.cloud.dataflow.rest.resource.StreamDeploymentResource;
 import org.springframework.cloud.dataflow.rest.resource.TaskDefinitionResource;
+import org.springframework.cloud.dataflow.rest.resource.TaskDslResource;
 import org.springframework.cloud.dataflow.rest.resource.TaskExecutionResource;
+import org.springframework.cloud.dataflow.rest.resource.TaskGraphResource;
 import org.springframework.cloud.dataflow.rest.resource.about.AboutResource;
 import org.springframework.cloud.dataflow.server.config.features.FeaturesProperties;
 import org.springframework.hateoas.EntityLinks;
@@ -116,6 +118,8 @@ public class RootController {
 			taskTemplated = entityLinks.linkToCollectionResource(JobInstanceResource.class).getHref() + "{?name}";
 			root.add(new Link(taskTemplated).withRel("jobs/instances/name"));
 			root.add(unescapeTemplateVariables(entityLinks.linkToSingleResource(JobInstanceResource.class, "{id}").withRel("jobs/instances/instance")));
+			root.add(entityLinks.linkFor(TaskGraphResource.class).withRel("tools/parseTaskTextToGraph"));
+			root.add(entityLinks.linkFor(TaskDslResource.class).withRel("tools/convertTaskGraphToText"));
 		}
 		if (featuresProperties.isAnalyticsEnabled()) {
 			root.add(entityLinks.linkToCollectionResource(CounterResource.class).withRel("counters"));
