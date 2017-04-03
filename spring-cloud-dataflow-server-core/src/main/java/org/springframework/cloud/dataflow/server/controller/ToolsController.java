@@ -17,8 +17,6 @@
  */
 package org.springframework.cloud.dataflow.server.controller;
 
-import java.util.Map;
-
 import org.springframework.cloud.dataflow.core.dsl.ParseException;
 import org.springframework.cloud.dataflow.core.dsl.TaskParser;
 import org.springframework.cloud.dataflow.core.dsl.graph.Graph;
@@ -28,6 +26,7 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,10 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/tools")
 public class ToolsController {
-	
-	private final static String TASK_NAME_KEY = "name";
-	
-	private final static String TASK_DSL_TEXT_KEY = "dsl";
 	
 	private TaskGraphAssembler taskGraphAssembler = new TaskGraphAssembler();
 	
@@ -54,12 +49,13 @@ public class ToolsController {
 	 * 
 	 * @return a map with either a 'graph' or 'error' key set 
 	 */
-	@RequestMapping(value = "/parseTaskTextToGraph", method = RequestMethod.POST)
-	public TaskGraphResource parseTaskTextToGraph(@RequestBody Map<String, String> definition) {
+	@RequestMapping(value = "/parseTaskTextToGraph", method = RequestMethod.GET)
+	public TaskGraphResource parseTaskTextToGraph(@RequestParam(value = "name", defaultValue = "__dummy") String name,
+			@RequestParam("definition") String dsl) {
 		Graph graph = null;
 		String errorMessage = null;
 		try {
-			TaskParser taskParser = new TaskParser(definition.get(TASK_NAME_KEY),definition.get(TASK_DSL_TEXT_KEY), true, true);
+			TaskParser taskParser = new TaskParser(name, dsl, true, true);
 			graph = taskParser.parse().toGraph();
 		}
 		catch (ParseException pe) {
@@ -71,7 +67,7 @@ public class ToolsController {
 	/**
 	 * Convert a graph format into DSL text format.
 	 */
-	@RequestMapping(value = "/convertTaskGraphToText", method = RequestMethod.POST)
+	@RequestMapping(value = "/convertTaskGraphToText", method = RequestMethod.GET)
 	public TaskDslResource convertTaskGraphToText(@RequestBody Graph graph) {
 		String dsl = null;
 		String errorMessage = null;

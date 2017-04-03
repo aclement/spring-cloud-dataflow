@@ -118,8 +118,6 @@ public class RootController {
 			taskTemplated = entityLinks.linkToCollectionResource(JobInstanceResource.class).getHref() + "{?name}";
 			root.add(new Link(taskTemplated).withRel("jobs/instances/name"));
 			root.add(unescapeTemplateVariables(entityLinks.linkToSingleResource(JobInstanceResource.class, "{id}").withRel("jobs/instances/instance")));
-			root.add(entityLinks.linkFor(TaskGraphResource.class).withRel("tools/parseTaskTextToGraph"));
-			root.add(entityLinks.linkFor(TaskDslResource.class).withRel("tools/convertTaskGraphToText"));
 		}
 		if (featuresProperties.isAnalyticsEnabled()) {
 			root.add(entityLinks.linkToCollectionResource(CounterResource.class).withRel("counters"));
@@ -138,6 +136,11 @@ public class RootController {
 		root.add(new Link(completionStreamTemplated).withRel("completions/stream"));
 		String completionTaskTemplated = entityLinks.linkFor(CompletionProposalsResource.class).withSelfRel().getHref() + ("/task{?start,detailLevel}");
 		root.add(new Link(completionTaskTemplated).withRel("completions/task"));
+		
+		String taskTextToGraphTemplated = entityLinks.linkFor(TaskGraphResource.class).withSelfRel().getHref() + ("/parseTaskTextToGraph{?name,definition}");
+		root.add(new Link(taskTextToGraphTemplated).withRel("tools/parseTaskTextToGraph"));
+		root.add(entityLinks.linkFor(TaskDslResource.class).withRel("tools/convertTaskGraphToText"));
+
 		return root;
 	}
 

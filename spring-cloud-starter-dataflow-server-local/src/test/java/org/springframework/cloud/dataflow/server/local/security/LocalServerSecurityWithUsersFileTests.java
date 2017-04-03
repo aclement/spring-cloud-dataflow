@@ -135,6 +135,32 @@ public class LocalServerSecurityWithUsersFileTests {
 			{ HttpMethod.GET, HttpStatus.BAD_REQUEST,  "/completions/task", createOnlyUser, ImmutableMap.of("start", "2", "detailLevel", "-123") },
 			{ HttpMethod.GET, HttpStatus.UNAUTHORIZED, "/completions/task", null, ImmutableMap.of("detailLevel", "2") },
 
+			/* ToolsController */
+			
+			{ HttpMethod.GET, HttpStatus.FORBIDDEN,    "/tools/parseTaskTextToGraph", adminOnlyUser, null },
+			{ HttpMethod.GET, HttpStatus.FORBIDDEN,    "/tools/parseTaskTextToGraph", viewOnlyUser, null },
+			{ HttpMethod.GET, HttpStatus.BAD_REQUEST,  "/tools/parseTaskTextToGraph", createOnlyUser, null },
+			{ HttpMethod.GET, HttpStatus.OK,           "/tools/parseTaskTextToGraph", createOnlyUser, ImmutableMap.of("dsl", "appA") },
+			{ HttpMethod.GET, HttpStatus.UNAUTHORIZED, "/tools/parseTaskTextToGraph", null, null },
+			
+			{ HttpMethod.GET, HttpStatus.FORBIDDEN,    "/tools/parseTaskTextToGraph", adminOnlyUser,  ImmutableMap.of("dsl", "appA")  },
+			{ HttpMethod.GET, HttpStatus.FORBIDDEN,    "/tools/parseTaskTextToGraph", viewOnlyUser,  ImmutableMap.of("dsl", "appA")  },
+			{ HttpMethod.GET, HttpStatus.BAD_REQUEST,  "/tools/parseTaskTextToGraph", createOnlyUser,  ImmutableMap.of("name", "foo", "dsl", "appA")  },
+			{ HttpMethod.GET, HttpStatus.OK,           "/tools/parseTaskTextToGraph", createOnlyUser, ImmutableMap.of("dsl", "appA") },
+			{ HttpMethod.GET, HttpStatus.UNAUTHORIZED, "/tools/parseTaskTextToGraph", null, ImmutableMap.of("name", "foo") },
+
+			{ HttpMethod.POST, HttpStatus.FORBIDDEN,    "/tools/convertTaskGraphToText", adminOnlyUser, null },
+			{ HttpMethod.POST, HttpStatus.FORBIDDEN,    "/tools/convertTaskGraphToText", viewOnlyUser, null },
+			{ HttpMethod.POST, HttpStatus.BAD_REQUEST,  "/tools/convertTaskGraphToText", createOnlyUser, null },
+			{ HttpMethod.POST, HttpStatus.OK,           "/tools/convertTaskGraphToText", createOnlyUser, ImmutableMap.of("graph", "{\"nodes\":[],\"links\":[]}") },
+			{ HttpMethod.POST, HttpStatus.UNAUTHORIZED, "/tools/convertTaskGraphToText", null, null },
+			
+			{ HttpMethod.POST, HttpStatus.FORBIDDEN,    "/tools/convertTaskGraphToText", adminOnlyUser,  ImmutableMap.of("graph", "{\"nodes\":[],\"links\":[]}")  },
+			{ HttpMethod.POST, HttpStatus.FORBIDDEN,    "/tools/convertTaskGraphToText", viewOnlyUser,  ImmutableMap.of("graph", "{\"nodes\":[],\"links\":[]}")  },
+			{ HttpMethod.POST, HttpStatus.BAD_REQUEST,  "/tools/convertTaskGraphToText", createOnlyUser,  ImmutableMap.of("graph", "{\"nodes\":[],\"links\":[]}") },
+			{ HttpMethod.POST, HttpStatus.OK,           "/tools/convertTaskGraphToText", createOnlyUser, ImmutableMap.of("graph", "{\"nodes\":[],\"links\":[]}") },
+			{ HttpMethod.POST, HttpStatus.UNAUTHORIZED, "/tools/convertTaskGraphToText", null, ImmutableMap.of("graph", "{\"nodes\":[],\"links\":[]}") },
+			
 			/* FeaturesController */
 
 			{ HttpMethod.GET, HttpStatus.OK, "/features", adminOnlyUser, null },
